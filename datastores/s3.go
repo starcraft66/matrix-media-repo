@@ -21,6 +21,7 @@ type s3 struct {
 	bucket             string
 	publicBaseUrl      string
 	redirectWhenCached bool
+	putWithMd5   		bool
 }
 
 func ResetS3Clients() {
@@ -41,6 +42,7 @@ func getS3(ds config.DatastoreConfig) (*s3, error) {
 	useSslStr, hasSsl := ds.Options["ssl"]
 	publicBaseUrl := ds.Options["publicBaseUrl"]
 	redirectWhenCachedStr, hasRedirectWhenCached := ds.Options["redirectWhenCached"]
+	useMd5Str, hasMd5 := ds.Options["useMD5"]
 
 	if !hasStorageClass {
 		storageClass = "STANDARD"
@@ -54,6 +56,11 @@ func getS3(ds config.DatastoreConfig) (*s3, error) {
 	redirectWhenCached := false
 	if hasRedirectWhenCached && redirectWhenCachedStr != "" {
 		redirectWhenCached, _ = strconv.ParseBool(redirectWhenCachedStr)
+	}
+
+	useMd5 := false
+	if hasMd5 && useMd5Str != "" {
+		useMd5, _ = strconv.ParseBool(useMd5Str)
 	}
 
 	var err error
@@ -73,6 +80,7 @@ func getS3(ds config.DatastoreConfig) (*s3, error) {
 		bucket:             bucket,
 		publicBaseUrl:      publicBaseUrl,
 		redirectWhenCached: redirectWhenCached,
+		putWithMd5:   		useMd5,
 	}
 	s3clients.Store(ds.Id, s3c)
 	return s3c, nil
