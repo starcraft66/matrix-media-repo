@@ -11,7 +11,6 @@ import (
 	"github.com/t2bot/matrix-media-repo/database"
 	"github.com/t2bot/matrix-media-repo/datastores"
 	"github.com/t2bot/matrix-media-repo/notifier"
-	"github.com/t2bot/matrix-media-repo/pipelines/_steps/meta"
 	"github.com/t2bot/matrix-media-repo/pipelines/_steps/quota"
 	"github.com/t2bot/matrix-media-repo/pipelines/_steps/upload"
 	"github.com/t2bot/matrix-media-repo/util"
@@ -21,7 +20,7 @@ import (
 // Execute Media upload. If mediaId is an empty string, one will be generated.
 func Execute(ctx rcontext.RequestContext, origin string, mediaId string, r io.ReadCloser, contentType string, fileName string, userId string, kind datastores.Kind) (*database.DbMedia, error) {
 	uploadDone := func(record *database.DbMedia) {
-		meta.FlagAccess(ctx, record.Sha256Hash, 0) // upload time is zero here to skip metrics gathering
+		// meta.FlagAccess(ctx, record.Sha256Hash, 0) // upload time is zero here to skip metrics gathering
 		if err := notifier.UploadDone(ctx, record); err != nil {
 			ctx.Log.Warn("Non-fatal error notifying about completed upload: ", err)
 			sentry.CaptureException(err)

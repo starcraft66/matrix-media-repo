@@ -13,7 +13,6 @@ import (
 	"github.com/t2bot/matrix-media-repo/common/rcontext"
 	"github.com/t2bot/matrix-media-repo/database"
 	"github.com/t2bot/matrix-media-repo/pipelines/_steps/download"
-	"github.com/t2bot/matrix-media-repo/pipelines/_steps/meta"
 	"github.com/t2bot/matrix-media-repo/pipelines/_steps/quarantine"
 	"github.com/t2bot/matrix-media-repo/util/readers"
 	"github.com/t2bot/matrix-media-repo/util/sfcache"
@@ -68,7 +67,7 @@ func Execute(ctx rcontext.RequestContext, origin string, mediaId string, opts Do
 			if record.Quarantined {
 				return quarantine.ReturnAppropriateThing(ctx, true, opts.RecordOnly, 512, 512)
 			}
-			meta.FlagAccess(ctx, record.Sha256Hash, record.CreationTs)
+			//meta.FlagAccess(ctx, record.Sha256Hash, record.CreationTs)
 			if opts.RecordOnly {
 				return nil, nil
 			}
@@ -91,7 +90,7 @@ func Execute(ctx rcontext.RequestContext, origin string, mediaId string, opts Do
 		if record.Quarantined {
 			return quarantine.ReturnAppropriateThing(ctx, true, opts.RecordOnly, 512, 512)
 		}
-		meta.FlagAccess(ctx, record.Sha256Hash, record.CreationTs)
+		//meta.FlagAccess(ctx, record.Sha256Hash, record.CreationTs)
 		if opts.RecordOnly {
 			r.Close()
 			return nil, nil
